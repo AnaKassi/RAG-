@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RAG Engineering — Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500&display=swap">
+<style>
+:root{--bg:#0f1011;--fg:#ecebe5;--mut:#a29f96;--acc:#f2b705;--card:rgba(15,16,17,.74);--line:rgba(236,235,229,.2);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1011;--fg:#ecebe5}}
+:root[data-theme="dark"]{--bg:#0f1011;--fg:#ecebe5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 15px/1.55 Inter,system-ui,sans-serif}
+[hidden]{display:none!important}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block}
+#scroll{height:800vh}
+.ui{position:fixed;z-index:2;pointer-events:none}
+h1,h2{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:700;margin:0;line-height:.95}
+header.ui{top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px 22px}
+.brand{font:700 20px 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.06em;pointer-events:auto;background:none;border:0;color:var(--fg);cursor:pointer;padding:4px 0}
+.brand b{color:var(--acc)}
+nav{display:flex;gap:6px;pointer-events:auto}
+nav button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:6px 12px;font:500 13px Inter,sans-serif;cursor:pointer;backdrop-filter:blur(6px)}
+nav button:hover,nav button.on{border-color:var(--acc);color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#hero{inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;transition:opacity .6s}
+#hero h1{font-size:clamp(64px,15vw,190px);letter-spacing:.02em;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+#hero h1 span{color:var(--acc)}
+#hero p{max-width:34ch;color:var(--mut);margin:18px 0 0}
+#hint{margin-top:34px;color:var(--fg);font-size:13px;border:1px solid var(--line);padding:8px 16px;border-radius:40px;background:var(--card)}
+#card{bottom:calc(28px + env(safe-area-inset-bottom,0px));width:min(410px,calc(100vw - 32px));background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-left:4px solid var(--acc);padding:20px 22px;opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s}
+#card.on{opacity:1;transform:none}
+#card.l{left:28px}#card.r{right:28px}
+#card small{color:var(--mut)}
+#card h2{font-size:38px;margin:4px 0 12px}
+#card h3{font:500 13px Inter,sans-serif;color:var(--acc);margin:10px 0 2px}
+#card p{margin:0;color:var(--fg);font-size:14px}
+#card ul{list-style:none;display:flex;gap:18px;margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line)}
+#card li b{display:block;font:700 22px 'Barlow Condensed','Arial Narrow',sans-serif}
+#card li{font-size:12px;color:var(--mut)}
+#end{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px calc(60px + env(safe-area-inset-bottom,0px));text-align:center;opacity:0;transition:opacity .6s}
+#end.on{opacity:1}
+#end h2{font-size:clamp(40px,7vw,84px)}
+#end a{pointer-events:auto;margin-top:22px;background:var(--acc);color:#111;font-weight:500;padding:13px 26px;text-decoration:none;border-radius:2px}
+#bar{left:0;bottom:0;height:3px;width:100%;background:var(--acc);transform-origin:left;transform:scaleX(0)}
+#nogl{inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:var(--bg)}
+@media(max-width:700px){
+#card{left:12px!important;right:12px!important;width:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:14px 16px}
+#card h2{font-size:30px;margin-bottom:6px}#card p{font-size:12.5px}#card h3{margin-top:6px}#card ul{margin-top:10px;padding-top:10px}
+header.ui{padding:12px 14px}nav button{padding:5px 9px}}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="scroll"></div>
+<header class="ui">
+  <button class="brand" id="home" aria-label="Back to start">RAG <b>Engineering</b></button>
+  <nav aria-label="Projects" id="nav"></nav>
+</header>
+<section class="ui" id="hero">
+  <h1>RAG <span>Engineering</span></h1>
+  <p>Residential, commercial and industrial construction, from design to handover.</p>
+  <div id="hint">Scroll to enter the gallery</div>
+</section>
+<aside class="ui" id="card" aria-live="polite"></aside>
+<section class="ui" id="end">
+  <h2>Your project could be the next one in the gallery</h2>
+  <a href="mailto:contato@exemplo.com">Request a quote</a>
+</section>
+<div class="ui" id="bar"></div>
+<div class="ui" id="nogl" hidden>Your browser could not open the 3D gallery. Try updating the browser or enabling hardware acceleration.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var P=[
+{t:'Aurora Building',c:'Residential, 14 floors',ch:'A narrow corner lot in a dense neighborhood, with a tight schedule.',so:'Reinforced concrete structure with reusable formwork and a ventilated facade installed in parallel.',re:'Delivered two months ahead of contract, with site waste under 3%.',m:[['9,800 m²','area'],['22 months','timeline'],['96','units']]},
+{t:'North Logistics Warehouse',c:'Industrial, steel structure',ch:'Keeping the client operating a few meters from the site without interrupting shipments.',so:'Off-site prefabrication of steel parts and strip-by-strip assembly, with a high-strength floor poured on night shifts.',re:'Warehouse operating in eight months, with a 12 m clear height and 24 loading docks.',m:[['12,000 m²','area'],['8 months','timeline'],['24','docks']]},
+{t:'Horizonte Clinical Center',c:'Commercial, retrofit and expansion',ch:'Expanding an occupied building while the clinics stay open.',so:'Floor-by-floor phasing, with acoustic and dust isolation, and new services routed through shafts.',re:'Three new floors delivered without a single day of clinic closure.',m:[['6,400 m²','area'],['14 months','timeline'],['3','new floors']]}
+];
+var stations=[-12,-32,-52],sides=[-1,1,-1],hues=[28,205,150];
+var nogl=document.getElementById('nogl'),renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:document.getElementById('stage'),antialias:true})}catch(e){nogl.hidden=false;return}
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+var scene=new THREE.Scene(),BG=0x0f1011,ACC=0xf2b705;
+scene.background=new THREE.Color(BG);scene.fog=new THREE.Fog(BG,10,46);
+var cam=new THREE.PerspectiveCamera(60,1,.1,120);
+function mat(c,r,m){return new THREE.MeshStandardMaterial({color:c,roughness:r==null?.8:r,metalness:m||0})}
+scene.add(new THREE.HemisphereLight(0xffffff,0x222222,.55));
+
+/* corredor */
+var Z1=14,Z2=-76,L=Z1-Z2,CZ=(Z1+Z2)/2,H=7;
+function plane(w,h,m,x,y,z,rx,ry){var p=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);p.position.set(x,y,z);p.rotation.set(rx||0,ry||0,0);scene.add(p);return p}
+plane(14,L,mat(0x1b1c1e,.5,.15),0,0,CZ,-Math.PI/2,0);
+plane(14,L,mat(0x141516),0,H,CZ,Math.PI/2,0);
+plane(L,H,mat(0x242527),-7,H/2,CZ,0,Math.PI/2).scale.set(1,1,1);
+plane(L,H,mat(0x242527),7,H/2,CZ,0,-Math.PI/2);
+var grid=new THREE.GridHelper(90,45,0x3a3c3f,0x2a2c2e);grid.position.set(0,.01,CZ);scene.add(grid);
+var steel=mat(0x3b3e41,.4,.6),glow=new THREE.MeshBasicMaterial({color:0xfff1d6});
+for(var z=10;z>Z2;z-=8){
+  [-1,1].forEach(function(s){var c=new THREE.Mesh(new THREE.BoxGeometry(.5,H,.5),steel);c.position.set(s*6.75,H/2,z);scene.add(c)});
+  var b=new THREE.Mesh(new THREE.BoxGeometry(14,.3,.4),steel);b.position.set(0,H-.15,z);scene.add(b);
+  var s2=new THREE.Mesh(new THREE.BoxGeometry(2.4,.06,.3),glow);s2.position.set(0,H-.35,z-4);scene.add(s2);
+}
+
+/* texturas procedurais das obras */
+function tex(type,hue){
+  var c=document.createElement('canvas');c.width=512;c.height=640;var g=c.getContext('2d');
+  var gr=g.createLinearGradient(0,0,0,640);gr.addColorStop(0,'hsl('+hue+',28%,26%)');gr.addColorStop(1,'hsl('+hue+',18%,9%)');
+  g.fillStyle=gr;g.fillRect(0,0,512,640);
+  g.strokeStyle='rgba(255,255,255,.07)';
+  for(var i=0;i<=512;i+=32){g.beginPath();g.moveTo(i,0);g.lineTo(i,640);g.stroke()}
+  for(var j=0;j<=640;j+=32){g.beginPath();g.moveTo(0,j);g.lineTo(512,j);g.stroke()}
+  function box(x,y,w,h,cols,rows){
+    g.fillStyle='hsl('+hue+',10%,62%)';g.fillRect(x,y,w,h);
+    var cw=w/cols,rh=h/rows;
+    for(var a=0;a<cols;a++)for(var b=0;b<rows;b++){
+      g.fillStyle=Math.random()<.32?'#f2b705':'hsl('+hue+',22%,16%)';
+      g.fillRect(x+a*cw+cw*.2,y+b*rh+rh*.22,cw*.6,rh*.5);
+    }
+  }
+  g.fillStyle='rgba(0,0,0,.4)';g.fillRect(0,560,512,80);
+  if(type==0){box(180,80,150,480,4,16);box(90,380,110,180,3,6);box(310,440,110,120,3,4)}
+  else if(type==1){
+    box(40,360,430,200,10,3);g.fillStyle='hsl('+hue+',12%,45%)';
+    for(var k=0;k<5;k++){g.beginPath();g.moveTo(40+k*86,360);g.lineTo(40+k*86+86,360);g.lineTo(40+k*86+86,310);g.closePath();g.fill()}
+    g.fillStyle='#111';for(var d=0;d<6;d++)g.fillRect(70+d*68,500,40,60);
+  }else{box(70,440,370,120,9,3);box(120,320,270,120,7,3);box(170,200,170,120,4,3);box(215,110,80,90,2,2)}
+  g.strokeStyle='#f2b705';g.lineWidth=2;g.strokeRect(14,14,484,612);
+  var t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
+
+/* obras: quadro na parede + maquete em pedestal */
+var pods=[],line=new THREE.LineBasicMaterial({color:ACC}),solid=new THREE.MeshStandardMaterial({color:0x2c2e30,roughness:.5,metalness:.3,transparent:true,opacity:.88});
+var models=[
+ [[1.3,4.6,1.3,0,0],[2.2,1,2.2,0,0]],
+ [[3.2,1.3,1.8,0,0],[.9,.5,1.8,-1.1,1.3],[.9,.5,1.8,0,1.3],[.9,.5,1.8,1.1,1.3]],
+ [[2.6,1.1,1.8,0,0],[2,1.1,1.5,0,1.1],[1.4,1.1,1.2,0,2.2],[.8,1.1,.9,0,3.3]]
+];
+P.forEach(function(p,i){
+  var z=stations[i],s=sides[i];
+  var g=new THREE.Group();g.position.set(s*6.85,3.6,z);g.rotation.y=-s*Math.PI/2;
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(5.2,6.4,.25),mat(0x0a0a0b,.4,.5)));
+  var pl=new THREE.Mesh(new THREE.PlaneGeometry(4.8,6),new THREE.MeshBasicMaterial({map:tex(i,hues[i])}));pl.position.z=.14;g.add(pl);
+  scene.add(g);
+  var pd=new THREE.Group();pd.position.set(-s*3.4,0,z);
+  var base=new THREE.Mesh(new THREE.CylinderGeometry(1.8,2,.5,40),mat(0x2b2d2f,.5,.3));base.position.y=.25;pd.add(base);
+  var m=new THREE.Group();m.position.y=.5;
+  models[i].forEach(function(q){
+    var geo=new THREE.BoxGeometry(q[0],q[1],q[2]||1.2),ms=new THREE.Mesh(geo,solid);
+    if(i==0)geo=null;
+    ms.position.set(q[3],q[4]+q[1]/2,0);ms.add(new THREE.LineSegments(new THREE.EdgesGeometry(ms.geometry),line));m.add(ms);
+  });
+  pd.add(m);scene.add(pd);pods.push(m);
+  var pt=new THREE.PointLight(0xffe2a8,1.1,16);pt.position.set(-s*3.4,5.2,z);scene.add(pt);
+});
+/* modelos: profundidade correta para a torre e o galpão */
+models.forEach(function(){});
+
+/* parede final */
+(function(){
+  var c=document.createElement('canvas');c.width=1024;c.height=512;var g=c.getContext('2d');
+  g.fillStyle='#1b1c1e';g.fillRect(0,0,1024,512);
+  g.font='700 300px "Barlow Condensed",Impact,sans-serif';g.textAlign='center';g.textBaseline='middle';
+  g.lineWidth=3;g.strokeStyle='#f2b705';g.strokeText('RAG',512,270);
+  plane(14,7,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c)}),0,H/2,Z2+.1,0,0);
+})();
+
+/* scroll, câmera e interface */
+var tp=0,cp=0,mx=0,my=0,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var card=document.getElementById('card'),hero=document.getElementById('hero'),end=document.getElementById('end'),bar=document.getElementById('bar'),nav=document.getElementById('nav');
+function maxS(){return Math.max(1,document.documentElement.scrollHeight-innerHeight)}
+function go(p){scrollTo({top:p*maxS(),behavior:reduce?'auto':'smooth'})}
+document.getElementById('home').onclick=function(){go(0)};
+P.forEach(function(p,i){var b=document.createElement('button');b.textContent=p.t.split(' ').slice(0,2).join(' ');b.onclick=function(){go((8-stations[i])/72)};nav.appendChild(b)});
+addEventListener('scroll',function(){tp=Math.min(1,Math.max(0,scrollY/maxS()))},{passive:true});
+addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+function size(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.fov=innerWidth<700?72:60;cam.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+function fill(i){
+  var p=P[i];
+  card.className='ui '+(sides[i]<0?'r':'l');
+  card.innerHTML='<small>'+p.c+'</small><h2>'+p.t+'</h2><h3>Challenge</h3><p>'+p.ch+'</p><h3>Solution</h3><p>'+p.so+'</p><h3>Result</h3><p>'+p.re+'</p><ul>'+p.m.map(function(x){return'<li><b>'+x[0]+'</b>'+x[1]+'</li>'}).join('')+'</ul>';
+}
+var cur=-2;
+function frame(){
+  cp+=(tp-cp)*(reduce?1:.07);
+  var z=8-cp*72,tx=0,act=-1;
+  stations.forEach(function(sz,i){
+    var d=Math.abs(z-sz),w=Math.max(0,1-d/10);w=w*w*(3-2*w);tx+=sides[i]*4*w;if(d<6)act=i;
+  });
+  cam.position.set(mx*.7,2.6-my*.3,z);cam.lookAt(tx+mx*1.5,2.8,z-9);
+  pods.forEach(function(m){m.rotation.y+=reduce?0:.006});
+  var state=cp<.04?-1:cp>.96?-3:act;
+  if(state!==cur){
+    cur=state;
+    if(act>=0&&state===act){fill(act);requestAnimationFrame(function(){card.classList.add('on')})}
+    else card.classList.remove('on');
+    hero.style.opacity=state===-1?1:0;
+    end.classList.toggle('on',state===-3);
+    [].forEach.call(nav.children,function(b,i){b.classList.toggle('on',i===act)});
+  }
+  bar.style.transform='scaleX('+cp+')';
+  renderer.render(scene,cam);
+  requestAnimationFrame(frame);
+}
+frame();
+})();
+</script>
+</body>
+</html>
